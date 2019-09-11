@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Context;
@@ -14,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     Button btnNum1,btnNum2,btnNum3,btnNum4,btnNum5,btnNum6,btnNum7,btnNum8,btnNum9,btnNum0;
-    Button btnClear,btnBackspace,btnBracket,btnPercentage,btnPoint,btnEqual,btnAdd,btnDiv,btnMul,btnSubs;
+    Button btnClear,btnBackspace,btnOpenBracket,btnCloseBracket,btnPoint,btnEqual,btnAdd,btnDiv,btnMul,btnSubs;
     TextView tvCalculation,tvResult;
     String calculation;
 
@@ -27,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
         /** access variable **/
         tvCalculation = (TextView) findViewById(R.id.tv_calculation);
         tvResult = (TextView) findViewById(R.id.tv_result);
+
+        tvCalculation.setText("");
+        tvResult.setText("");
         btnClear = (Button) findViewById(R.id.btn_delete);
         btnBackspace = (Button) findViewById(R.id.btn_backspace);
-        btnBracket = (Button) findViewById(R.id.btn_bracket);
-        btnPercentage = (Button) findViewById(R.id.btn_percentage);
+        btnOpenBracket = (Button) findViewById(R.id.btn_openbracket);
+        btnCloseBracket = (Button) findViewById(R.id.btn_closebracket);
         btnPoint = (Button) findViewById(R.id.btn_point);
         btnEqual = (Button) findViewById(R.id.btn_equal);
 
@@ -51,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
         btnNum9 = (Button) findViewById(R.id.btn_num9);
 
 
-        tvCalculation.setText("");
-        tvResult.setText("");
+
 
         /** Set Function in button**/
 
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 tvResult.setText("");
             }
         });
+
 
 
 
@@ -195,13 +199,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
+                calculation = tvCalculation.getText().toString();
                 calculation = calculation.replaceAll("X", "*");
 
                 Context rhino = Context.enter();
                 rhino.setOptimizationLevel(-1);
                 String result = "";
 
+
+
+                Toast t = Toast.makeText(getApplicationContext(),calculation,Toast.LENGTH_SHORT);
+                t.show();
                 try{
                     Scriptable scope = rhino.initStandardObjects();
                     result = rhino.evaluateString(scope, calculation, "JavaScript", 1, null).toString();
