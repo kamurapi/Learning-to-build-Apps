@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -25,7 +26,7 @@
             android:layout_marginBottom="3dp"
             android:maxLines="3"
             android:textSize="20dp"
-            android:text="ye let's write your note"/>
+            />
 
         <TextView
             android:id="@+id/note_date"
