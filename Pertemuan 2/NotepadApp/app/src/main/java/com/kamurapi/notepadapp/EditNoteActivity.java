@@ -19,7 +19,9 @@ public class EditNoteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getSupportActionBar().show();
         setContentView(R.layout.activity_edit_note);
+
         inputNote = findViewById(R.id.input_note);
         dao = NotesDB.getInstance(this).notesDao();
     }
