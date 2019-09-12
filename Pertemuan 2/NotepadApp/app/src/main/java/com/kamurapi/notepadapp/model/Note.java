@@ -1,8 +1,26 @@
 package com.kamurapi.notepadapp.model;
 
+
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity(tableName = "notes")
 public class Note {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @ColumnInfo(name = "text")
     private String noteText;
+    @ColumnInfo(name = "date")
     private long noteDate;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Note(String noteText, long noteDate) {
         this.noteText = noteText;

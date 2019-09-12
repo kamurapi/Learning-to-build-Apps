@@ -27,15 +27,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder>{
     }
 
 
-    @NonNull
+
     @Override
-    public NoteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_layout, parent, false);
+    public NoteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.note_layout, parent, false);
         return new NoteHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoteHolder holder, int position) {
+    public void onBindViewHolder(NoteHolder holder, int position) {
         Note note = getNote(position);
         if (note!=null){
             holder.noteText.setText(note.getNoteText());
@@ -55,6 +55,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder>{
         TextView noteText, noteDate;
         public NoteHolder(View itemView){
             super(itemView);
+            noteDate=itemView.findViewById(R.id.note_date);
+            noteText=itemView.findViewById(R.id.note_text);
         }
     }
 }
