@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.support.v7.widget.Toolbar;
 
 import com.kamurapi.notepadapp.db.NotesDB;
 import com.kamurapi.notepadapp.db.NotesDao;
@@ -21,6 +22,8 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //getSupportActionBar().show();
         setContentView(R.layout.activity_edit_note);
+        Toolbar toolbar = findViewById(R.id.edit_note_activity_toolbar);
+        setSupportActionBar(toolbar);
 
         inputNote = findViewById(R.id.input_note);
         dao = NotesDB.getInstance(this).notesDao();
