@@ -30,6 +30,8 @@ import androidx.fragment.app.FragmentActivity;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
+    private ImageButton btnGo, btnSearch;
+    private EditText etLat, etLong,etZoom,etAlamat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +40,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        ImageButton go = (ImageButton) findViewById(R.id.btnGo);
-        ImageButton cari =  (ImageButton) findViewById(R.id.btnSearch);
-        go.setOnClickListener(op);
-        cari.setOnClickListener(op);
+
+        btnGo = (ImageButton) findViewById(R.id.btnGo);
+        btnSearch =  (ImageButton) findViewById(R.id.btnSearch);
+        etAlamat = (EditText) findViewById(R.id.etAlamat);
+        etLat = (EditText) findViewById(R.id.etLat);
+        etLong = (EditText) findViewById(R.id.etLong);
+        etZoom = (EditText) findViewById(R.id.etZoom);
+
+        btnGo.setOnClickListener(op);
+        btnSearch.setOnClickListener(op);
     }
 
     @Override
@@ -99,19 +107,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     gotoLokasi();
                     break;
                 case R.id.btnSearch:
-                    goCari();
+                    if(!etAlamat.getText().toString().isEmpty()) {
+                        goCari();
+                    }
                     break;
             }
         }
     };
 
     private void gotoLokasi()  {
-        EditText lat = (EditText) findViewById(R.id.etLat);
-        EditText lng = (EditText) findViewById(R.id.etLong);
-        EditText zoom = (EditText) findViewById(R.id.etZoom);
-        Double dbllat = Double.parseDouble(lat.getText().toString());
-        Double dbllng = Double.parseDouble(lng.getText().toString());
-        Float dblzoom = Float.parseFloat(zoom.getText().toString());
+        Double dbllat = Double.parseDouble(etLat.getText().toString());
+        Double dbllng = Double.parseDouble(etLong.getText().toString());
+        Float dblzoom = Float.parseFloat(etZoom.getText().toString());
         Toast.makeText(this,"Move to Lat:" +dbllat + " Long:" +dbllng, Toast.LENGTH_LONG).show();
         gotoPeta(dbllat,dbllng,dblzoom);
     }
@@ -129,30 +136,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void goCari(){
-        EditText tempat = (EditText) findViewById(R.id.etAlamat);
         Geocoder g = new Geocoder(getBaseContext());
         try {
-            List<Address> daftar = g.getFromLocationName(tempat.getText().toString(),1);
+            List<Address> daftar = g.getFromLocationName(etAlamat.getText().toString(),1);
             Address alamat = daftar.get(0);
             String nemuAlamat =  alamat.getAddressLine(0);
             Double lintang = alamat.getLatitude();
             Double bujur = alamat.getLongitude();
             Toast.makeText(getBaseContext(),"Ketemu " + nemuAlamat,Toast.LENGTH_LONG).show();
 
-            EditText zoom = (EditText) findViewById(R.id.etZoom);
-            Float dblzoom = Float.parseFloat(zoom.getText().toString());
+            Float dblzoom = Float.parseFloat(etZoom.getText().toString());
             Toast.makeText(this,"Move to "+ nemuAlamat +" Lat:" + lintang + " Long:" +bujur,Toast.LENGTH_LONG).show();
             gotoPeta(lintang,bujur,dblzoom);
-            EditText lat = (EditText) findViewById(R.id.etLat);
-            EditText lng = (EditText) findViewById(R.id.etLong);
-            Double dbllat = Double.parseDouble(lat.getText().toString());
-            Double dbllng = Double.parseDouble(lng.getText().toString());
+
+
+            Double dbllat = Double.parseDouble(etLat.getText().toString());
+            Double dbllng = Double.parseDouble(etLong.getText().toString());
             hitungJarak(dbllat,dbllng,lintang,bujur);
 
 
 
-            lat.setText(lintang.toString());
-            lng.setText(bujur.toString());
+            etLat.setText(lintang.toString());
+            etLong.setText(bujur.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
