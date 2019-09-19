@@ -2,11 +2,17 @@ package com.example.gmaps;
 
 
 import android.annotation.SuppressLint;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,9 +22,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     @Override
@@ -28,11 +38,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        @SuppressLint("WrongViewCast")
-        Button go = (Button) findViewById(R.id.btnGo);
+        ImageButton go = (ImageButton) findViewById(R.id.btnGo);
         go.setOnClickListener(op);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.normal :
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case R.id.terrain:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            case R.id.sattelite:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case R.id.hibryd:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
+            case R.id.none:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NONE);break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * Manipulates the map once available.
@@ -88,6 +123,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    private void goCari(){
+        EditText tempat = (EditText) findViewById(R.id.etAlamat);
+        Geocoder g = new Geocoder(getBaseContext());
+        try {
+            List<Address> daftar = g.getFromLocationName(tempat.getText().toString(),1);
+            Address alamat = daftar.get(0);
+            String nemuAlamat =  alamat.getAddressLine(0);
+            Double lintang = alamat.getLatitude();
+            Double bujur = alamat.getLongitude();
+            Toast.makeText(getBaseContext(),"Ketemu " + nemuAlamat,Toast.LENGTH_LONG).show();
 
+            EditText zoom = (EditText) findViewById(R.id.etZoom);
+            Float dblzoom = Float.parseFloat(zoom.getText().toString());
+            Toast.makeText(this,"Move to "+ nemuAlamat +" Lat:" + lintang + " Long:" +bujur,Toast.LENGTH_LONG).show();
+            gotoPeta(lintang,bujur,dblzoom);
+            EditText lat = (EditText) findViewById(R.id.etLat);
+            EditText lng = (EditText) findViewById(R.id.etLong);
+            Double dbllat = Double.parseDouble(lat.getText().toString());
+            Double dbllng = Double.parseDouble(lng.getText().toString());
+            hitungJarak(dbllat,dbllng,lintang,bujur);
+
+
+
+            lat.setText(lintang.toString());
+            lng.setText(bujur.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hitungJarak(Double latAsal, Double lngAsal, Double latTujuan, Double lngTujuan) {
+        Location asal = new Location("asal");
+        Location tujuan = new Location("tujuan");
+        tujuan.setLatitude(latTujuan);
+        tujuan.setLatitude(lngTujuan);
+        asal.setLatitude(latAsal);
+        asal.setLongitude(lngTujuan);
+        float jarak = (float) asal.distanceTo(tujuan)/1000;
+        String jaraknya = String.valueOf(jarak);
+        Toast.makeText(getBaseContext(), "jarak : " + jaraknya +" km ", Toast.LENGTH_LONG).show();
+    }
 
 }
