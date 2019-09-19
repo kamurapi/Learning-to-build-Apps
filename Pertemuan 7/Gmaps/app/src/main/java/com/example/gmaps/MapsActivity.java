@@ -39,7 +39,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ImageButton go = (ImageButton) findViewById(R.id.btnGo);
+        ImageButton cari =  (ImageButton) findViewById(R.id.btnSearch);
         go.setOnClickListener(op);
+        cari.setOnClickListener(op);
     }
 
     @Override
@@ -95,6 +97,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case R.id.btnGo:
                     sembunyikanKeyBoard(view);
                     gotoLokasi();
+                    break;
+                case R.id.btnSearch:
+                    goCari();
                     break;
             }
         }
